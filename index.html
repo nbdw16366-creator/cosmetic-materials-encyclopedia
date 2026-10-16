@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موسوعة مواد التجميل</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #18324b;
+    }
+
+    header {
+      background: #123c69;
+      color: white;
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 0;
+      color: #dce9f6;
+      line-height: 1.8;
+    }
+
+    main {
+      width: min(100% - 28px, 850px);
+      margin: 24px auto;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #d5e0eb;
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: #2878bd;
+    }
+
+    h2 {
+      font-size: 21px;
+      margin: 26px 0 14px;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .category {
+      background: white;
+      border: 1px solid #e0e8f0;
+      border-radius: 14px;
+      padding: 18px 14px;
+      text-align: center;
+      font-weight: bold;
+      color: #174a78;
+    }
+
+    .materials {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .material {
+      background: white;
+      border: 1px solid #e0e8f0;
+      border-radius: 14px;
+      padding: 17px;
+    }
+
+    .material h3 {
+      margin: 0 0 9px;
+      font-size: 19px;
+      color: #174a78;
+    }
+
+    .material p {
+      margin: 7px 0;
+      line-height: 1.8;
+      color: #52677b;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 22px;
+      background: white;
+      border-radius: 12px;
+      color: #65788b;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 12px;
+      color: #6a7d90;
+      font-size: 14px;
+    }
+
+    @media (min-width: 600px) {
+      .categories {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .materials {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>موسوعة مواد التجميل</h1>
+    <p>مرجع تعليمي للتعرّف على المواد الخام التجميلية وخصائصها</p>
+  </header>
+
+  <main>
+    <input
+      id="search"
+      class="search-box"
+      type="search"
+      placeholder="ابحث باسم المادة أو وصفها..."
+      aria-label="البحث عن مادة تجميلية"
+    >
+
+    <h2>أقسام الموسوعة</h2>
+
+    <section class="categories">
+      <div class="category">مواد الترطيب</div>
+      <div class="category">مواد التنظيف</div>
+      <div class="category">مواد الاستحلاب</div>
+      <div class="category">مواد التكثيف</div>
+      <div class="category">مواد التقشير</div>
+      <div class="category">المستخلصات</div>
+    </section>
+
+    <h2>المواد الموجودة</h2>
+
+    <section id="materials" class="materials">
+      <article class="material">
+        <h3>الجلسرين — Glycerin</h3>
+        <p><strong>التعريف:</strong> مادة مرطبة تجذب الماء وتساعد على الاحتفاظ بالرطوبة.</p>
+        <p><strong>الخصائص:</strong> سائل شفاف لزج، قابل للامتزاج بالماء.</p>
+        <p><strong>القسم:</strong> مواد الترطيب</p>
+      </article>
+
+      <article class="material">
+        <h3>كاربومر — Carbomer</h3>
+        <p><strong>التعريف:</strong> بوليمر يُستخدم لتكثيف بعض التركيبات التجميلية وتكوين الجل.</p>
+        <p><strong>الخصائص:</strong> يحتاج إلى ضبط مناسب للتركيبة حتى يعطي القوام المطلوب.</p>
+        <p><strong>القسم:</strong> مواد التكثيف</p>
+      </article>
+    </section>
+
+    <p id="empty" class="empty" hidden>ما لقينا مادة بالاسم ده.</p>
+  </main>
+
+  <footer>
+    موسوعة مواد التجميل — محتوى تعليمي
+  </footer>
+
+  <script>
+    const search = document.getElementById("search");
+    const materials = document.querySelectorAll(".material");
+    const empty = document.getElementById("empty");
+
+    search.addEventListener("input", function () {
+      const query = search.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      materials.forEach(function (material) {
+        const text = material.textContent.toLowerCase();
+        const match = text.includes(query);
+
+        material.hidden = !match;
+
+        if (match) {
+          visibleCount++;
+        }
+      });
+
+      empty.hidden = visibleCount !== 0;
+    });
+  </script>
+
+</body>
+</html>
