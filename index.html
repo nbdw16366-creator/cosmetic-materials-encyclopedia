@@ -2,208 +2,428 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موسوعة مواد التجميل</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #18324b;
-    }
-
-    header {
-      background: #123c69;
-      color: white;
-      padding: 24px 16px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0 0 10px;
-      font-size: 26px;
-    }
-
-    header p {
-      margin: 0;
-      color: #dce9f6;
-      line-height: 1.8;
-    }
-
-    main {
-      width: min(100% - 28px, 850px);
-      margin: 24px auto;
-    }
-
-    .search-box {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #d5e0eb;
-      border-radius: 12px;
-      font-size: 16px;
-      background: white;
-      outline: none;
-    }
-
-    .search-box:focus {
-      border-color: #2878bd;
-    }
-
-    h2 {
-      font-size: 21px;
-      margin: 26px 0 14px;
-    }
-
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .category {
-      background: white;
-      border: 1px solid #e0e8f0;
-      border-radius: 14px;
-      padding: 18px 14px;
-      text-align: center;
-      font-weight: bold;
-      color: #174a78;
-    }
-
-    .materials {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .material {
-      background: white;
-      border: 1px solid #e0e8f0;
-      border-radius: 14px;
-      padding: 17px;
-    }
-
-    .material h3 {
-      margin: 0 0 9px;
-      font-size: 19px;
-      color: #174a78;
-    }
-
-    .material p {
-      margin: 7px 0;
-      line-height: 1.8;
-      color: #52677b;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 22px;
-      background: white;
-      border-radius: 12px;
-      color: #65788b;
-    }
-
-    footer {
-      text-align: center;
-      padding: 24px 12px;
-      color: #6a7d90;
-      font-size: 14px;
-    }
-
-    @media (min-width: 600px) {
-      .categories {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .materials {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موسوعة مواد التجميل</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f6fb;color:#17324d}
+header{background:linear-gradient(135deg,#0759a8,#12366a);color:white;text-align:center;padding:28px 14px}
+header h1{margin:0 0 9px;font-size:25px}
+header p{margin:0;font-size:14px}
+main{max-width:850px;margin:18px auto;padding:0 13px}
+.panel,.material{background:white;border-radius:15px;padding:18px;margin-bottom:15px;box-shadow:0 3px 12px #15365b12}
+h2{font-size:19px;margin:0 0 14px;color:#0759a8}
+h3{margin:0 0 10px}
+input,button,select{font:inherit;width:100%;padding:13px;margin:6px 0;border-radius:9px}
+input,select{border:1px solid #ccd8e6;background:#fff}
+button{border:0;background:#0759a8;color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6}
+.secondary{background:#e7eff9;color:#0759a8}
+.hidden{display:none!important}
+.msg{padding:12px;border-radius:9px;background:#edf4fc;margin-top:10px;line-height:1.8;overflow-wrap:anywhere}
+.error{background:#fff0f0;color:#9b2020}
+.success{background:#e8f7ed;color:#176b35}
+.muted{color:#62758a;font-size:13px;line-height:1.8}
+.topline{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.topline button{width:auto;padding:10px 14px}
+.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.category{padding:13px 7px;text-align:center;background:#e5effb;border-radius:10px;color:#0759a8;cursor:pointer;font-size:14px}
+.category.active{background:#0759a8;color:white}
+.material h3{color:#0759a8}
+.material p{line-height:1.8;margin:7px 0;font-size:14px;overflow-wrap:anywhere}
+.tag{display:inline-block;background:#e8f2ff;color:#0759a8;border-radius:20px;padding:5px 10px;font-size:12px}
+footer{text-align:center;padding:20px;color:#718096;font-size:12px}
+@media(min-width:600px){.categories{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
 </head>
-
 <body>
+<header>
+<h1>موسوعة مواد التجميل</h1>
+<p>Hashim Raw Materials Encyclopedia</p>
+<p style="margin-top:8px">معرفة علمية منظمة لمواد التجميل الخام</p>
+</header>
 
-  <header>
-    <h1>موسوعة مواد التجميل</h1>
-    <p>مرجع تعليمي للتعرّف على المواد الخام التجميلية وخصائصها</p>
-  </header>
+<main>
+<section id="authPanel" class="panel">
+<h2>🔐 الدخول إلى الموسوعة</h2>
+<p class="muted">سجّل دخولك أو أنشئ حساباً جديداً. عرض المواد متاح للحسابات المعتمدة فقط.</p>
 
-  <main>
-    <input
-      id="search"
-      class="search-box"
-      type="search"
-      placeholder="ابحث باسم المادة أو وصفها..."
-      aria-label="البحث عن مادة تجميلية"
-    >
+<div id="loginForm">
+<h3>تسجيل الدخول</h3>
+<input id="loginEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
+<input id="loginPassword" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+<button id="loginBtn" onclick="login()">دخول</button>
+<button class="secondary" onclick="showSignup()">إنشاء حساب جديد</button>
+<button class="secondary" onclick="resetPassword()">نسيت كلمة المرور؟</button>
+</div>
 
-    <h2>أقسام الموسوعة</h2>
+<div id="signupForm" class="hidden">
+<h3>إنشاء حساب</h3>
+<input id="fullName" placeholder="الاسم الكامل" autocomplete="name">
+<input id="phone" type="tel" placeholder="رقم الهاتف">
+<input id="signupEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
+<input id="signupPassword" type="password" placeholder="كلمة المرور (8 أحرف على الأقل)" autocomplete="new-password">
+<button id="signupBtn" onclick="signup()">إنشاء الحساب</button>
+<button class="secondary" onclick="showLogin()">عندي حساب بالفعل</button>
+</div>
+<div id="authMsg" class="msg hidden" role="status"></div>
+</section>
 
-    <section class="categories">
-      <div class="category">مواد الترطيب</div>
-      <div class="category">مواد التنظيف</div>
-      <div class="category">مواد الاستحلاب</div>
-      <div class="category">مواد التكثيف</div>
-      <div class="category">مواد التقشير</div>
-      <div class="category">المستخلصات</div>
-    </section>
+<section id="statusPanel" class="panel hidden">
+<h2 id="statusTitle">حالة الحساب</h2>
+<p id="statusText"></p>
+<button id="retryBtn" class="secondary hidden" onclick="checkCurrentUser()">إعادة التحقق</button>
+<button onclick="logout()">تسجيل الخروج</button>
+</section>
 
-    <h2>المواد الموجودة</h2>
+<section id="library" class="hidden">
+<div class="panel">
+<div class="topline">
+<h2 style="margin:0">📚 مكتبة المواد</h2>
+<button onclick="logout()">خروج</button>
+</div>
+<p id="welcome" class="muted"></p>
+<input id="search" placeholder="ابحث باسم المادة أو وصفها..." oninput="renderMaterials()">
+<div id="categories" class="categories"></div>
+<p id="count" class="muted"></p>
+</div>
+<div id="materials"></div>
+</section>
+</main>
 
-    <section id="materials" class="materials">
-      <article class="material">
-        <h3>الجلسرين — Glycerin</h3>
-        <p><strong>التعريف:</strong> مادة مرطبة تجذب الماء وتساعد على الاحتفاظ بالرطوبة.</p>
-        <p><strong>الخصائص:</strong> سائل شفاف لزج، قابل للامتزاج بالماء.</p>
-        <p><strong>القسم:</strong> مواد الترطيب</p>
-      </article>
+<footer>هاشم لاب | Hashim Lab — علم ونتيجة</footer>
 
-      <article class="material">
-        <h3>كاربومر — Carbomer</h3>
-        <p><strong>التعريف:</strong> بوليمر يُستخدم لتكثيف بعض التركيبات التجميلية وتكوين الجل.</p>
-        <p><strong>الخصائص:</strong> يحتاج إلى ضبط مناسب للتركيبة حتى يعطي القوام المطلوب.</p>
-        <p><strong>القسم:</strong> مواد التكثيف</p>
-      </article>
-    </section>
+<script>
+const SUPABASE_URL = "https://dmueztnxogbrvlnoveok.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ZLLhwBg3VfIjBpASDcm2hA_B3KNkafx";
+const SITE_URL = "https://nbdw16366-creator.github.io/cosmetic-materials-encyclopedia/";
 
-    <p id="empty" class="empty" hidden>ما لقينا مادة بالاسم ده.</p>
-  </main>
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let allMaterials = [];
+let selectedCategory = "الكل";
+let busy = false;
 
-  <footer>
-    موسوعة مواد التجميل — محتوى تعليمي
-  </footer>
+const $ = id => document.getElementById(id);
 
-  <script>
-    const search = document.getElementById("search");
-    const materials = document.querySelectorAll(".material");
-    const empty = document.getElementById("empty");
+function message(id, text, type=""){
+  const el = $(id);
+  el.textContent = text;
+  el.className = "msg" + (type ? " " + type : "");
+  el.classList.remove("hidden");
+}
+function hideMessage(id){ $(id).classList.add("hidden"); }
+function setBusy(value){
+  busy = value;
+  ["loginBtn","signupBtn"].forEach(id=>{
+    const el = $(id);
+    if(el) el.disabled = value;
+  });
+}
+function showLogin(){
+  $("loginForm").classList.remove("hidden");
+  $("signupForm").classList.add("hidden");
+  hideMessage("authMsg");
+}
+function showSignup(){
+  $("loginForm").classList.add("hidden");
+  $("signupForm").classList.remove("hidden");
+  hideMessage("authMsg");
+}
+function showOnly(section){
+  ["authPanel","statusPanel","library"].forEach(id=>$(id).classList.add("hidden"));
+  $(section).classList.remove("hidden");
+}
+function friendlyError(error){
+  const text = error?.message || "حصل خطأ غير معروف.";
+  if(/Invalid login credentials/i.test(text)) return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+  if(/Email not confirmed/i.test(text)) return "أكد بريدك الإلكتروني من الرسالة المرسلة ليك، وبعدها سجّل دخول.";
+  if(/User already registered/i.test(text)) return "البريد دا مسجل من قبل. سجّل دخول بدل إنشاء حساب جديد.";
+  if(/Failed to fetch|NetworkError/i.test(text)) return "الاتصال فشل. اتأكد من الإنترنت وحاول تاني.";
+  return text;
+}
 
-    search.addEventListener("input", function () {
-      const query = search.value.trim().toLowerCase();
-      let visibleCount = 0;
+async function signup(){
+  if(busy) return;
+  const name = $("fullName").value.trim();
+  const phone = $("phone").value.trim();
+  const email = $("signupEmail").value.trim();
+  const password = $("signupPassword").value;
 
-      materials.forEach(function (material) {
-        const text = material.textContent.toLowerCase();
-        const match = text.includes(query);
+  if(!name || !email || !password){
+    message("authMsg","أدخل الاسم والبريد الإلكتروني وكلمة المرور.");
+    return;
+  }
+  if(password.length < 8){
+    message("authMsg","كلمة المرور لازم تكون 8 أحرف على الأقل.");
+    return;
+  }
 
-        material.hidden = !match;
-
-        if (match) {
-          visibleCount++;
-        }
-      });
-
-      empty.hidden = visibleCount !== 0;
+  setBusy(true);
+  try{
+    const {data,error} = await db.auth.signUp({
+      email,password,
+      options:{
+        data:{full_name:name,phone},
+        emailRedirectTo:SITE_URL
+      }
     });
-  </script>
+    if(error) throw error;
 
+    if(data.session && data.user){
+      await loadUser(data.user);
+    }else{
+      message("authMsg","تم إرسال طلب إنشاء الحساب. افتح بريدك الإلكتروني وأكد الحساب، وبعدها ارجع للموقع وسجّل دخول. لو ما وصلتك الرسالة افحص البريد غير المرغوب فيه.","success");
+    }
+  }catch(error){
+    message("authMsg",friendlyError(error),"error");
+  }finally{
+    setBusy(false);
+  }
+}
+
+async function login(){
+  if(busy) return;
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  if(!email || !password){
+    message("authMsg","أدخل البريد الإلكتروني وكلمة المرور.");
+    return;
+  }
+
+  setBusy(true);
+  try{
+    const {data,error} = await db.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    await loadUser(data.user);
+  }catch(error){
+    message("authMsg",friendlyError(error),"error");
+  }finally{
+    setBusy(false);
+  }
+}
+
+async function loadUser(user){
+  showOnly("statusPanel");
+  $("statusTitle").textContent = "جارٍ التحقق من حسابك";
+  $("statusText").textContent = "لحظة واحدة...";
+  $("retryBtn").classList.add("hidden");
+
+  try{
+    let {data:profile,error} = await db
+      .from("profiles")
+      .select("id,full_name,payment_status,is_admin")
+      .eq("id",user.id)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    if(!profile){
+      const meta = user.user_metadata || {};
+      const {data:newProfile,error:insertError} = await db
+        .from("profiles")
+        .insert({
+          id:user.id,
+          full_name:meta.full_name || user.email || "مستخدم جديد",
+          phone:meta.phone || "",
+          payment_status:"pending",
+          is_admin:false
+        })
+        .select("id,full_name,payment_status,is_admin")
+        .single();
+
+      if(insertError) throw insertError;
+      profile = newProfile;
+    }
+
+    if(profile.is_admin !== true && profile.payment_status !== "approved"){
+      allMaterials = [];
+      $("materials").replaceChildren();
+      $("retryBtn").classList.remove("hidden");
+
+      if(profile.payment_status === "rejected"){
+        $("statusTitle").textContent = "تم رفض الطلب";
+        $("statusText").textContent = "حسابك غير معتمد حالياً. تواصل مع إدارة الموسوعة للمراجعة.";
+      }else{
+        $("statusTitle").textContent = "حسابك قيد المراجعة";
+        $("statusText").textContent = "تم تسجيل حسابك، لكن المواد لن تظهر إلا بعد اعتماد الإدارة. بعد الاعتماد اضغط إعادة التحقق.";
+      }
+      return;
+    }
+
+    $("welcome").textContent = "مرحباً " + (profile.full_name || user.email) +
+      (profile.is_admin ? " — حساب الإدارة" : "");
+    await fetchMaterials();
+  }catch(error){
+    $("statusTitle").textContent = "تعذر التحقق من الحساب";
+    $("statusText").textContent = friendlyError(error) +
+      " تأكد من إعداد جداول profiles وسياسات الأمان في Supabase.";
+    $("retryBtn").classList.remove("hidden");
+  }
+}
+
+async function checkCurrentUser(){
+  const {data,error} = await db.auth.getUser();
+  if(error || !data.user){
+    showOnly("authPanel");
+    showLogin();
+    return;
+  }
+  await loadUser(data.user);
+}
+
+async function fetchMaterials(){
+  $("statusTitle").textContent = "جارٍ تحميل الموسوعة";
+  $("statusText").textContent = "جاري جلب المواد من قاعدة البيانات...";
+  try{
+    const {data,error} = await db
+      .from("materials")
+      .select("id,name,description,scientific_name,uses,benefits,safety_notes,category")
+      .order("name");
+    if(error) throw error;
+
+    allMaterials = data || [];
+    selectedCategory = "الكل";
+    $("search").value = "";
+    showOnly("library");
+    renderCategories();
+    renderMaterials();
+  }catch(error){
+    allMaterials = [];
+    $("statusTitle").textContent = "تعذر تحميل المواد";
+    $("statusText").textContent = friendlyError(error);
+    showOnly("statusPanel");
+    $("retryBtn").classList.remove("hidden");
+  }
+}
+
+function renderCategories(){
+  const names = [...new Set(allMaterials.map(m=>m.category).filter(Boolean))];
+  const list = ["الكل",...names];
+  const root = $("categories");
+  root.replaceChildren();
+
+  list.forEach(name=>{
+    const btn = document.createElement("div");
+    btn.className = "category" + (name === selectedCategory ? " active" : "");
+    btn.textContent = name;
+    btn.onclick = ()=>{
+      selectedCategory = name;
+      renderCategories();
+      renderMaterials();
+    };
+    root.appendChild(btn);
+  });
+}
+
+function renderMaterials(){
+  const root = $("materials");
+  root.replaceChildren();
+
+  const term = $("search").value.trim().toLowerCase();
+  const filtered = allMaterials.filter(m=>{
+    const text = [m.name,m.description,m.scientific_name,m.uses,m.benefits,m.category]
+      .filter(Boolean).join(" ").toLowerCase();
+    return (selectedCategory === "الكل" || m.category === selectedCategory)
+      && text.includes(term);
+  });
+
+  $("count").textContent = "عدد المواد: " + filtered.length;
+
+  if(filtered.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "panel";
+    empty.textContent = allMaterials.length
+      ? "ما لقينا مواد مطابقة للبحث."
+      : "الموسوعة اتربطت، لكن قاعدة البيانات ما فيها مواد حالياً. أضف المواد من Supabase أولاً.";
+    root.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(m=>{
+    const card = document.createElement("article");
+    card.className = "material";
+
+    const title = document.createElement("h3");
+    title.textContent = m.name || "مادة بدون اسم";
+    card.appendChild(title);
+
+    if(m.category){
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = m.category;
+      card.appendChild(tag);
+    }
+
+    const fields = [
+      ["الاسم العلمي",m.scientific_name],
+      ["التعريف",m.description],
+      ["الاستخدامات",m.uses],
+      ["الفوائد",m.benefits],
+      ["ملاحظات السلامة",m.safety_notes]
+    ];
+
+    fields.forEach(([label,value])=>{
+      if(!value) return;
+      const p = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = label + ": ";
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode(value));
+      card.appendChild(p);
+    });
+    root.appendChild(card);
+  });
+}
+
+async function resetPassword(){
+  const email = $("loginEmail").value.trim();
+  if(!email){
+    message("authMsg","اكتب بريدك الإلكتروني في خانة تسجيل الدخول أولاً.");
+    return;
+  }
+  try{
+    const {error} = await db.auth.resetPasswordForEmail(email,{
+      redirectTo:SITE_URL
+    });
+    if(error) throw error;
+    message("authMsg","لو البريد مسجل، حتوصلك رسالة لإعادة تعيين كلمة المرور.","success");
+  }catch(error){
+    message("authMsg",friendlyError(error),"error");
+  }
+}
+
+async function logout(){
+  await db.auth.signOut();
+  allMaterials = [];
+  $("materials").replaceChildren();
+  showOnly("authPanel");
+  showLogin();
+}
+
+db.auth.onAuthStateChange((event)=>{
+  if(event === "SIGNED_OUT"){
+    allMaterials = [];
+    $("materials").replaceChildren();
+    showOnly("authPanel");
+  }
+});
+
+(async function init(){
+  try{
+    const {data,error} = await db.auth.getSession();
+    if(error) throw error;
+    if(data.session){
+      await loadUser(data.session.user);
+    }else{
+      showOnly("authPanel");
+    }
+  }catch(error){
+    showOnly("authPanel");
+    message("authMsg","تعذر الاتصال بـ Supabase: " + friendlyError(error),"error");
+  }
+})();
+</script>
 </body>
 </html>
